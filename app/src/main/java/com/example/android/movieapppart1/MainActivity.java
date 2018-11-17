@@ -1,6 +1,7 @@
 package com.example.android.movieapppart1;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.GridLayoutManager;
@@ -47,22 +48,112 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
         //Assigns this activity with the layout
         setContentView(R.layout.activity_main);
 
-        /******* Step 1: get json data.  Create URL for retreival of json data  ********/
-        tmdb connectTMDB = new tmdb();
-        String queryString = connectTMDB.BuildDefaultQuery();
-        URL urlstring = NetworkUtils.buildUrl(queryString);
-        String jsonReturnValue = "";
-        try {
-            jsonReturnValue = NetworkUtils.getResponseFromHttpUrl(urlstring);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        //ASYNC TASK FOR CONTINUING TO BUILD MOVIE ARRAY
+        class FetchMovieTask extends AsyncTask<String, Void, String> {
+
+            public FetchMovieTask(String URLFetchString) {
+                //make sure we have something
+                if (URLFetchString.isEmpty()) {
+
+                    //return "";
+                }
+
+                /******* Step 1: get json data.  Create URL for retreival of json data  ********/
+                tmdb connectTMDB = new tmdb();
+                String queryString = connectTMDB.BuildDefaultQuery();
+                URL urlstring = NetworkUtils.buildUrl(queryString);
+                String jsonReturnValue = "";
+                try {
+                    jsonReturnValue = NetworkUtils.getResponseFromHttpUrl(urlstring);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+//                URL MovieRequestUrl = NetworkUtils.buildUrl(URLFetchString);
+//                //URL MovieRequestUrl = NetworkUtils.buildUrl(MovieRequestUrl);
+//                try {
+//                    String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
+//
+//                    movie[] simpleJsonMovieData = JsonMovieUtils
+//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+//                    return simpleJsonMovieData;
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+
+            @Override
+            protected String doInBackground(String... searchQuery) {
+                //make sure we have something
+                if (searchQuery.length == 0) {
+                    return null;
+                }
+
+                String location = searchQuery[0];
+                URL MovieRequestUrl = NetworkUtils.buildUrl(location);
+
+                try {
+                    String simpleJsonMovieData = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
+
+//                    String simpleJsonMovieData = JsonMovieUtils
+//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+
+                    return simpleJsonMovieData;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+
+//            @Override
+//            protected movie[] doInBackground(String... searchQuery) {
+//                //make sure we have something
+//                if (searchQuery.length == 0) { return null; }
+//
+//                String location = searchQuery[0];
+//                URL MovieRequestUrl = NetworkUtils.buildUrl(location);
+//
+//                try {
+//                    String jsonMovieResponse = NetworkUtils
+//                            .getResponseFromHttpUrl(MovieRequestUrl);
+//
+//                    movie[] simpleJsonMovieData = JsonMovieUtils
+//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+//
+//                    return simpleJsonMovieData;
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//            }
+
+            // COMPLETED (7) Override the onPostExecute method to display the results of the network request
+            @Override
+            protected void onPostExecute(String MovieData) {
+                if (MovieData != null) {
+
+                    /******* Step 1a: Test json data return.  ******/
+
+                    //Grab textview
+                    TextView tvTestView = (TextView) findViewById(R.id.TestView);
+                    tvTestView.setText(MovieData);
+
+
+//                    for (Integer x = 0; x <= MovieData.length; x++) {
+//                        Picasso.with(context).load(MovieData[x].getImage().toString()).into(mMovieThumb);
+//                    }
+                }
+            }
         }
 
-        /******* Step 1a: Test json data return.  ******/
 
-        //Grab textview
-        TextView tvTestView = (TextView) findViewById(R.id.TestView);
-        tvTestView.setText(jsonReturnValue);
 //        //Grabs the imageview
 //        ImageView mMovieThumb = (ImageView) findViewById(R.id.iv_movie_thumb);
 //        //defines Grid layout
@@ -71,10 +162,6 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
 //        mMovielist.setHasFixedSize(true);
 
         /******* Step 2: Parse json data to retreive Movie info  ******/
-
-
-
-
 
 
 //        /** vvv Movie values and variables vvv **/
@@ -111,7 +198,7 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
 //            e.printStackTrace();
 //        }
     }
-
+}
 
 
 
@@ -150,62 +237,3 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
 //            return null;
 //        }
 //    }
-    //ASYNC TASK FOR CONTINUING TO BUILD MOVIE ARRAY
-//    public class FetchMovieTask extends AsyncTask<String, Void, movie[]> {
-//
-//        public FetchMovieTask(String URLFetchString) {
-//            //make sure we have something
-//            if (URLFetchString.isEmpty()) { return null; }
-//
-//            URL MovieRequestUrl = NetworkUtils.buildUrl(URLFetchString);
-//            //URL MovieRequestUrl = NetworkUtils.buildUrl(MovieRequestUrl);
-//            try {
-//                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
-//
-//                movie[] simpleJsonMovieData = JsonMovieUtils
-//                        .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
-//
-//                return simpleJsonMovieData;
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected movie[] doInBackground(String... searchQuery) {
-//            //make sure we have something
-//            if (searchQuery.length == 0) { return null; }
-//
-//            String location = searchQuery[0];
-//            URL MovieRequestUrl = NetworkUtils.buildUrl(location);
-//
-//            try {
-//                String jsonMovieResponse = NetworkUtils
-//                        .getResponseFromHttpUrl(MovieRequestUrl);
-//
-//                movie[] simpleJsonMovieData = JsonMovieUtils
-//                        .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
-//
-//                return simpleJsonMovieData;
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//        }
-//
-//        // COMPLETED (7) Override the onPostExecute method to display the results of the network request
-//        @Override
-//        protected void onPostExecute(movie[] MovieData) {
-//            if (MovieData != null) {
-//
-//                for(Integer x=0 ; x<=MovieData.length;x++){
-//                    Picasso.with(context).load(MovieData[x].getImage().toString()).into(mMovieThumb);
-//                }
-//            }
-//        }
-//    }
-
-}
