@@ -47,111 +47,61 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
 
         //Assigns this activity with the layout
         setContentView(R.layout.activity_main);
+        FetchMovieTask ATMovieFetch;
+        ATMovieFetch = new FetchMovieTask();
+        ATMovieFetch.execute();
+    }
 
 
-        //ASYNC TASK FOR CONTINUING TO BUILD MOVIE ARRAY
-        class FetchMovieTask extends AsyncTask<String, Void, String> {
+    //ASYNC TASK FOR CONTINUING TO BUILD MOVIE ARRAY
+    class FetchMovieTask extends AsyncTask<String, Void, String> {
 
-            public FetchMovieTask(String URLFetchString) {
-                //make sure we have something
-                if (URLFetchString.isEmpty()) {
-
-                    //return "";
-                }
-
-                /******* Step 1: get json data.  Create URL for retreival of json data  ********/
-                tmdb connectTMDB = new tmdb();
-                String queryString = connectTMDB.BuildDefaultQuery();
-                URL urlstring = NetworkUtils.buildUrl(queryString);
-                String jsonReturnValue = "";
-                try {
-                    jsonReturnValue = NetworkUtils.getResponseFromHttpUrl(urlstring);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        public FetchMovieTask() {
+            /******* Step 1: get json data.  Create URL for retreival of json data  ********/
+            tmdb connectTMDB = new tmdb();
+            String queryString = connectTMDB.BuildDefaultQuery();
+            URL urlstring = NetworkUtils.buildUrl(queryString);
+            String jsonReturnValue = "";
+            try {
+                jsonReturnValue = NetworkUtils.getResponseFromHttpUrl(urlstring);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
 
-
-//                URL MovieRequestUrl = NetworkUtils.buildUrl(URLFetchString);
-//                //URL MovieRequestUrl = NetworkUtils.buildUrl(MovieRequestUrl);
-//                try {
-//                    String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
-//
-//                    movie[] simpleJsonMovieData = JsonMovieUtils
-//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
-//                    return simpleJsonMovieData;
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return null;
-//                }
-
-            @Override
-            protected String doInBackground(String... searchQuery) {
-                //make sure we have something
-                if (searchQuery.length == 0) {
-                    return null;
-                }
-
-                String location = searchQuery[0];
-                URL MovieRequestUrl = NetworkUtils.buildUrl(location);
-
-                try {
-                    String simpleJsonMovieData = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
-
+        @Override
+        protected String doInBackground(String... searchQuery) {
+            //make sure we have something
+            if (searchQuery.length == 0) {
+                return null;
+            }
+            String location = searchQuery[0];
+            URL MovieRequestUrl = NetworkUtils.buildUrl(location);
+            try {
+                String simpleJsonMovieData = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
 //                    String simpleJsonMovieData = JsonMovieUtils
 //                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
-
-                    return simpleJsonMovieData;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return simpleJsonMovieData;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
-
-
-//            @Override
-//            protected movie[] doInBackground(String... searchQuery) {
-//                //make sure we have something
-//                if (searchQuery.length == 0) { return null; }
-//
-//                String location = searchQuery[0];
-//                URL MovieRequestUrl = NetworkUtils.buildUrl(location);
-//
-//                try {
-//                    String jsonMovieResponse = NetworkUtils
-//                            .getResponseFromHttpUrl(MovieRequestUrl);
-//
-//                    movie[] simpleJsonMovieData = JsonMovieUtils
-//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
-//
-//                    return simpleJsonMovieData;
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-
-            // COMPLETED (7) Override the onPostExecute method to display the results of the network request
-            @Override
-            protected void onPostExecute(String MovieData) {
-                if (MovieData != null) {
-
-                    /******* Step 1a: Test json data return.  ******/
-
-                    //Grab textview
-                    TextView tvTestView = (TextView) findViewById(R.id.TestView);
-                    tvTestView.setText(MovieData);
-
-
+        }
+        // COMPLETED (7) Override the onPostExecute method to display the results of the network request
+        @Override
+        protected void onPostExecute(String MovieData) {
+            if (MovieData != null) {
+                /******* Step 1a: Test json data return.  ******/
+                //Grab textview
+                TextView tvTestView = (TextView) findViewById(R.id.TestView);
+                tvTestView.setText(MovieData);
 //                    for (Integer x = 0; x <= MovieData.length; x++) {
 //                        Picasso.with(context).load(MovieData[x].getImage().toString()).into(mMovieThumb);
 //                    }
-                }
             }
         }
+    }
+}
 
 
 //        //Grabs the imageview
@@ -197,8 +147,46 @@ public class MainActivity extends AppCompatActivity { // implements GreenAdapter
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-    }
-}
+
+//                URL MovieRequestUrl = NetworkUtils.buildUrl(URLFetchString);
+//                //URL MovieRequestUrl = NetworkUtils.buildUrl(MovieRequestUrl);
+//                try {
+//                    String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(MovieRequestUrl);
+//
+//                    movie[] simpleJsonMovieData = JsonMovieUtils
+//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+//                    return simpleJsonMovieData;
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+
+
+
+//            @Override
+//            protected movie[] doInBackground(String... searchQuery) {
+//                //make sure we have something
+//                if (searchQuery.length == 0) { return null; }
+//
+//                String location = searchQuery[0];
+//                URL MovieRequestUrl = NetworkUtils.buildUrl(location);
+//
+//                try {
+//                    String jsonMovieResponse = NetworkUtils
+//                            .getResponseFromHttpUrl(MovieRequestUrl);
+//
+//                    movie[] simpleJsonMovieData = JsonMovieUtils
+//                            .getSimpleMovieStringsFromJson(MainActivity.this, jsonMovieResponse);
+//
+//                    return simpleJsonMovieData;
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//            }
+
 
 
 
