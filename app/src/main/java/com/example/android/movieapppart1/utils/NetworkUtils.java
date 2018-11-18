@@ -35,7 +35,7 @@ public final class NetworkUtils {
     //constants
     private static final String base_url = "http://profile_sizes.tmdb.org/t/p/";
     private static final String secure_base_url = "https://profile_sizes.tmdb.org/t/p/";
-    private static final String myAPIKEY = "";
+    private static final String myAPIKEY = "78d11765bbeacbce8284a78e208558c6";
     private static final String defaultSize = "w185";
     private static final String popularMoviesString = "http://api.themoviedb.org/3/movie/popular?api_key=";
 
